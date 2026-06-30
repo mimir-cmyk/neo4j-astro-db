@@ -1,0 +1,1238 @@
+{
+  "title": "astro",
+  "version": "2.4",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_constellation": "Lynx",
+      "neodash_constellation_display": "Lynx",
+      "neodash_star_name": "Barnard's star",
+      "neodash_star_name_display": "Barnard's star",
+      "neodash_maxdistance": 1070,
+      "neodash_maxdistance_display": 1070,
+      "neodash_startyear": {
+        "year": 1909,
+        "month": 6,
+        "day": 8
+      },
+      "neodash_startyear_display": 1519,
+      "neodash_endyear": {
+        "year": 2026,
+        "month": 6,
+        "day": 16
+      },
+      "neodash_endyear_display": 2013,
+      "neodash_star_hip": 746,
+      "neodash_star_hip_display": 746,
+      "neodash_minyear": {
+        "year": 1940,
+        "month": 1,
+        "day": 1
+      },
+      "neodash_minmass": "300",
+      "neodash_star": "Barnard's star",
+      "neodash_star_display": "Barnard's star",
+      "neodash_maxtemp": 2677,
+      "neodash_maxtemp_display": 2677,
+      "neodash_maxmass": "5000",
+      "neodash_maxmass_display": 787,
+      "neodash_distance": 125,
+      "neodash_distance_display": 125,
+      "neodash_system_name": "K2-3",
+      "neodash_system_name_display": "K2-3",
+      "neodash_discoverymethod_name": "Imaging",
+      "neodash_discoverymethod_name_display": "Imaging",
+      "neodash_discoverymethod_name_2": "Astrometry",
+      "neodash_discoverymethod_name_2_display": "Astrometry",
+      "neodash_system_star_name": "",
+      "neodash_system_star_name_display": "",
+      "neodash_planet_name": "K2-4 b",
+      "neodash_planet_name_display": "K2-4 b",
+      "neodash_starname": "Achernar",
+      "neodash_starname_display": "Achernar",
+      "neodash_facilityname": "Anglo-Australian Telescope",
+      "neodash_facilityname_display": "Anglo-Australian Telescope",
+      "neodash_startyear1": "1990",
+      "neodash_endyear1": "1990",
+      "neodash_facility_name": "OGLE",
+      "neodash_facility_name_display": "OGLE",
+      "neodash_facility_name_2": "MOA",
+      "neodash_facility_name_2_display": "MOA",
+      "undefined": "2020",
+      "neodash_endyear_1": "1990",
+      "neodash_startyear_1": "1970",
+      "neodash_discovered_by_year_2": 2015,
+      "neodash_discovered_by_year_2_display": 2015,
+      "neodash_discovered_by_year_1": 1994,
+      "neodash_discovered_by_year_1_display": 1994
+    },
+    "theme": "light",
+    "downloadImageEnabled": true
+  },
+  "pages": [
+    {
+      "title": "stellar overview",
+      "reports": [
+        {
+          "id": "91c3bdba-ef1c-404b-a3bf-537eaac69f1c",
+          "title": "brightest star known",
+          "query": "MATCH (s:Star)\nWHERE s.mag IS NOT NULL\nRETURN s.name AS brightestStar, s.mag AS magnitude\n//the smaller the mag the brighter the star\nORDER BY s.mag ASC\nLIMIT 1",
+          "width": 11,
+          "height": 3,
+          "x": 0,
+          "y": 5,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "transposed": false,
+            "compact": true,
+            "allowDownload": true
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "b66db32e-b7b7-4c04-ba45-b611db143906",
+          "title": "amount of stars in constellations",
+          "query": "\nMATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\nRETURN c.name AS constellation,\n       count(*) AS stars\nORDER BY stars DESC\nLIMIT 40\n",
+          "width": 18,
+          "height": 5,
+          "x": 5,
+          "y": 0,
+          "type": "bar",
+          "selection": {
+            "index": "constellation",
+            "value": "stars",
+            "key": "(none)"
+          },
+          "settings": {
+            "valueScale": "linear",
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "legend": true,
+            "marginBottom": 100,
+            "colors": "set1",
+            "legendWidth": 160,
+            "barValues": true,
+            "customDimensions": false,
+            "padding": 0.25,
+            "barWidth": 10,
+            "innerPadding": 0,
+            "marginLeft": 0
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "ec9df5a1-b997-4acd-9291-c586c1025254",
+          "title": "spectral type distribution",
+          "query": "MATCH (s:Star)\nWHERE s.spect IS NOT NULL\n\n//take 1st char of spect(denotes major spect class)\nWITH substring(s.spect, 0, 1) AS spectralType, s\nWITH [spectralType, s.name] AS path, 1 AS val\n//each star gets 1 as val(1 item)-hierarchical\nRETURN path, val\nLIMIT 2000\n\n\n",
+          "width": 10,
+          "height": 4,
+          "x": 14,
+          "y": 5,
+          "type": "sunburst",
+          "selection": {
+            "index": "path",
+            "value": "val",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "colors": "pastel1"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "963c199f-add4-4cff-a48b-5c8a30369339",
+          "title": "distance distribution(lightyear)of stars",
+          "query": "\nMATCH (s:Star)\nWHERE s.dist IS NOT NULL\n  AND s.dist < 100000\n\nWITH\nCASE\n    WHEN s.dist*3.262 < 50 THEN '0-50 ly'\n    WHEN s.dist*3.262 < 100 THEN '50-100 ly'\n    WHEN s.dist*3.262 < 500 THEN '100-500 ly'\n    WHEN s.dist*3.262 < 1000 THEN '500-1000 ly'\n    ELSE '1000+ ly'\nEND AS range\n\nRETURN range, count(*) \nORDER BY range\n\n\n\n\n",
+          "width": 10,
+          "height": 5,
+          "x": 0,
+          "y": 8,
+          "type": "bar",
+          "selection": {
+            "index": "range",
+            "value": "count(*)",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "legend": true,
+            "showOptionalSelections": false,
+            "layout": "horizontal",
+            "colors": "paired",
+            "positionLabel": "top",
+            "marginBottom": 20,
+            "expandHeightForLegend": true,
+            "legendPosition": "Horizontal",
+            "marginLeft": 80,
+            "hideSelections": true
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "9ef96ac8-2a5e-4ffc-a0f8-e12a9bde9103",
+          "title": "distance vs luminosity",
+          "query": "MATCH (s:Star)\nWHERE s.dist IS NOT NULL\n  AND s.lum IS NOT NULL\n\nRETURN\nround(s.dist * 3.262,1) AS DistanceLightYear,\nround(s.lum,2) AS Luminosity\n\nORDER BY DistanceLightYear ASC\nLIMIT 50",
+          "width": 24,
+          "height": 4,
+          "x": 0,
+          "y": 13,
+          "type": "line",
+          "selection": {
+            "x": "DistanceLightYear",
+            "value": [
+              "Luminosity"
+            ]
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "legend": true,
+            "colors": "set1",
+            "marginLeft": 80,
+            "marginTop": 50,
+            "marginRight": 70,
+            "curve": "linear",
+            "xScale": "point"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "36274876-7b95-4e7c-9439-1f53b1fb0296",
+          "title": "stars in 1+ constellations",
+          "query": "MATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\n\nWITH s, split(c.name, \";\") AS parts\n\nWHERE size(parts) > 1\n\nRETURN\ns.name AS Star,\n//list comprehension\n//for all x in parts,remove whitespace\n[ x IN parts | trim(x) ] AS SharedConstellations,\ns.mag AS Magnitude,\ns.dist AS Distance\nORDER BY s.mag\n\n\n",
+          "width": 13,
+          "height": 4,
+          "x": 10,
+          "y": 9,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "allowDownload": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "7c6958de-0faa-429c-bbcf-c789decdd2ba",
+          "title": "most similar star to selected one",
+          "query": "\nMATCH (target:Star {name:$neodash_starname})\n//ensure target has these numeric values for computing\nWHERE target.mag IS NOT NULL\n  AND target.dist IS NOT NULL\n  AND target.lum IS NOT NULL\n\nMATCH (s:Star)\n//diff star and not same, non-null for computing\nWHERE s.hip <> target.hip\n  AND s.mag IS NOT NULL\n  AND s.dist IS NOT NULL\n  AND s.lum IS NOT NULL\n\nWITH target,s,\n//this measures how \"far apart\" 2 stars are according to these properties\n//abs-the smaller the diff, the more similar so sort by asc\nabs(s.mag - target.mag) +\nabs(s.dist - target.dist)/1000 +\n//dist and lum values can be very large so scale them down\n//for them not to dominate/overshadow calculation\nabs(s.lum - target.lum)/100000 AS similarityScore\n\nRETURN\ns.name AS SimilarStar,\nround(similarityScore,2) AS Score,\ns.mag AS Magnitude,\ns.dist AS Distance,\ns.lum AS Luminosity\nORDER BY Score DESC\nLIMIT 10\n\n\n\n\n",
+          "width": 15,
+          "height": 4,
+          "x": 0,
+          "y": 17,
+          "type": "table",
+          "selection": {},
+          "settings": {},
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "eac602f4-61ee-4652-9eb8-f72ccac143bc",
+          "title": "select a star",
+          "query": "MATCH (s:Star)\nWHERE s.name IS NOT NULL\nRETURN DISTINCT s.name AS value\nORDER BY value",
+          "width": 8,
+          "height": 2,
+          "x": 15,
+          "y": 17,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "starname",
+            "parameterName": "neodash_starname"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "fbf9b29b-9271-49b5-bd94-c182f11edbca",
+          "title": "About this page",
+          "query": "This page provides a basic summary of all stars in the dataset.\nIt focuses on basic stellar properties such as magnitude, luminosity, distance, and spectral, which constellations they belong to.\nYou can also find the most similar star to the one you select.\n",
+          "width": 5,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        }
+      ]
+    },
+    {
+      "title": "constellation explorer",
+      "reports": [
+        {
+          "id": "b4e8ce70-012f-4522-aab3-65f28fab77a4",
+          "title": "choose constellation",
+          "query": "RETURN \"Any\" AS value\nUNION\nMATCH (c:Constellation)\nRETURN c.name AS value\nORDER BY c.name\n",
+          "width": 7,
+          "height": 2,
+          "x": 0,
+          "y": 2,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "constellation",
+            "parameterName": "neodash_constellation"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "ac5bfae0-b026-4b39-89b5-9ff80304f52a",
+          "title": "choose distance range",
+          "query": "MATCH (s:Star)\nWHERE s.dist IS NOT NULL \nWITH DISTINCT \n//truncating with buckets\ntoInteger((s.dist*3.262) / 10) * 10 AS bucket \nRETURN bucket AS value\nORDER BY value",
+          "width": 7,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "maxdistance",
+            "parameterName": "neodash_maxdistance",
+            "fullscreenEnabled": true
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "be23f640-0126-4e03-94f2-b4779074f531",
+          "title": "stars in selected constellation and distance",
+          "query": "\nMATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\nWHERE c.name = $neodash_constellation\n  AND s.dist IS NOT NULL\n  AND s.mag IS NOT NULL\n  AND toFloat(s.dist) <= $neodash_maxdistance\n\nRETURN\ns.name AS Star,\ns.mag AS Magnitude,\ns.dist*(3.262) AS DistanceLightYears,//dist is in parsecs\ns.spect AS SpectralType,\nc.name AS Constellation\nORDER BY s.mag DESC\nLIMIT 20\n\n",
+          "width": 17,
+          "height": 3,
+          "x": 7,
+          "y": 2,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "compact": false,
+            "allowDownload": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "e5e07828-399c-4f10-ad1a-5c0a3b8c9188",
+          "title": "spectral types in selected constellation",
+          "query": "\n\nMATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\nWHERE c.name = $neodash_constellation\n  AND s.spect IS NOT NULL\n\nWITH substring(s.spect,0,1) AS spectralClass,\n     count(*) AS stars\n\nRETURN spectralClass, stars\n\n\n\n\n",
+          "width": 8,
+          "height": 4,
+          "x": 0,
+          "y": 6,
+          "type": "pie",
+          "selection": {
+            "index": "spectralClass",
+            "value": "stars",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "legend": true,
+            "colors": "paired",
+            "innerRadius": 0.23
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "1c7dfd4b-7376-4742-8715-02357e353015",
+          "title": "stars by magnitude var in const",
+          "query": "\nMATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\nWHERE c.name = $neodash_constellation\n  AND s.var_min IS NOT NULL\n  AND s.var_max IS NOT NULL\n\nRETURN\ns.name AS Star,\ns.var AS VariableType,\nround(s.var_max - s.var_min,2) AS MagnitudeVariation\nORDER BY MagnitudeVariation DESC\nLIMIT 15\n\n\n\n\n",
+          "width": 8,
+          "height": 2,
+          "x": 0,
+          "y": 10,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "wrapContent": false,
+            "allowDownload": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "b9c19cab-e1a9-4ab8-8c89-b309a2df94fa",
+          "title": "selected constellation network",
+          "query": "\n\nMATCH (s:Star)-[i:IN_CONSTELLATION]->(c:Constellation)\nWHERE c.name = $neodash_constellation\nRETURN s,c,i\nLIMIT 300\n\n\n\n",
+          "width": 16,
+          "height": 5,
+          "x": 8,
+          "y": 5,
+          "type": "graph3d",
+          "selection": {
+            "Star": "name",
+            "Constellation": "name",
+            "IN_CONSTELLATION": "(label)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "nodeColorScheme": "paired",
+            "relationshipParticles": true,
+            "showPropertiesOnHover": true,
+            "layout": "force-directed"
+          },
+          "database": "e7bf01a1",
+          "schema": [
+            [
+              "Star",
+              "absmag",
+              "lookup",
+              "vx",
+              "var_min",
+              "dec",
+              "vy",
+              "bf",
+              "rv",
+              "vz",
+              "lum",
+              "ci",
+              "var",
+              "dist",
+              "hip",
+              "ra",
+              "spect",
+              "mag",
+              "var_max",
+              "bayer",
+              "name",
+              "x",
+              "y",
+              "z",
+              "flam"
+            ],
+            [
+              "Constellation",
+              "name"
+            ],
+            [
+              "IN_CONSTELLATION"
+            ]
+          ]
+        },
+        {
+          "id": "1964aef6-b3e3-4b11-b863-01fbd64b701e",
+          "title": "unusually bright stars in selected constellation",
+          "query": "\nMATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\nWHERE c.name = $neodash_constellation\n  AND s.lum IS NOT NULL\n\nWITH avg(s.lum) AS avgLum,//avg lum in const c\n     stDev(s.lum) AS stdLum,//how spread out luminosities are\n     c//WITH carries c into next match\n\nMATCH (star:Star)-[:IN_CONSTELLATION]->(c)\nWHERE star.lum > avgLum + 2*stdLum//basically ~95% brighter than other strs\n\nRETURN\nstar.name AS Star,\nround(star.lum,2) AS Luminosity,\nround(avgLum,2) AS ConstellationAverage\nORDER BY star.lum DESC\n\n\n\n\n",
+          "width": 17,
+          "height": 2,
+          "x": 7,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "noDataMessage": "no such star in this const",
+            "compact": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "c6652e0c-05c7-4c57-a989-5e0a6c30e92a",
+          "title": "highest spectral diversity constellations + value by rarity",
+          "query": "MATCH (s:Star)-[:IN_CONSTELLATION]->(c:Constellation)\n//rows\nWITH c, substring(s.spect, 0, 1) AS type, count(*) AS typeCount//count of spect-type stars\n\nWITH c,\n     collect({type: type, count: typeCount}) AS data,//lists\n     collect(type) AS types,\n     sum(typeCount) AS total//total stars in const\n\nUNWIND data AS d//turn back into rows\n\nWITH c,\n     d.count AS typeCount,\n     total,\n     types,\n     (1.0 / d.count) AS rarity //more count/occurence of one type-larger num\n\nWITH c,\n     sum(rarity) AS raritySum,//sum rarities of spect in this const\n     total,//total stars in const\n     types\n\nRETURN\nc.name AS name,\ntypes,\nraritySum * total AS value //diversity,scaling by size\nORDER BY value DESC\nLIMIT 20",
+          "width": 15,
+          "height": 4,
+          "x": 8,
+          "y": 10,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "allowDownload": true,
+            "downloadImageEnabled": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "edc4d6a0-d2c9-477d-940b-10b6dc964924",
+          "title": "About this page",
+          "query": "\n\nThis page shows information about selected constellation. Focuses on the star properties/diversities in the constellation. You can see the visual network of stars in the constellation.",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {},
+          "schema": []
+        }
+      ]
+    },
+    {
+      "title": "meteorites",
+      "reports": [
+        {
+          "id": "108f6eeb-edf4-4757-90ed-e611ec60281f",
+          "title": "meteor future risk prediction map",
+          "query": "MATCH (m:Meteorite)\nWHERE m.location IS NOT NULL\n\nWITH m,//normalize missing values\ncoalesce(m.mass, 1) AS mass,\ncoalesce(m.year, 2000) AS year\n\nSET m.intensity =\nlog10(mass + 1) * (1 + (year / 2026.0))//log10 prevents huge meteorites from dominating the map,\n//mass+1 if mass=0\n//recent years get higher multiplier\n//+1 for scaling since always<1\n\nRETURN m\nLIMIT 1000",
+          "width": 16,
+          "height": 4,
+          "x": 0,
+          "y": 4,
+          "type": "map",
+          "selection": {
+            "Meteorite": "name"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "clusterMarkers": true,
+            "layerType": "heatmap",
+            "intensityProp": "intensity",
+            "autorun": true,
+            "downloadImageEnabled": true,
+            "hideSelections": true
+          },
+          "schema": [
+            [
+              "Meteorite",
+              "intensity",
+              "year",
+              "mass",
+              "name",
+              "reclat",
+              "reclong",
+              "location",
+              "id"
+            ]
+          ],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "676da261-a5aa-4b2c-bfe9-a771aca67cac",
+          "title": "meteorites per year",
+          "query": "\n\nMATCH (m:Meteorite)\nWHERE m.year IS NOT NULL AND m.year>=1900\nRETURN m.year AS Year, count(*) AS Count\nORDER BY Year\nLIMIT 50\n\n\n\n",
+          "width": 16,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "bar",
+          "selection": {
+            "index": "Year",
+            "value": "Count",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "colors": "dark2"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "f8246ecb-3643-47c4-8b0a-2566f399d342",
+          "title": "heaviest meteorites",
+          "query": "MATCH (m:Meteorite)\nWHERE m.mass IS NOT NULL\nRETURN m.name, m.mass\nORDER BY m.mass DESC\nLIMIT 10\n\n\n\n\n\n",
+          "width": 8,
+          "height": 4,
+          "x": 16,
+          "y": 3,
+          "type": "table",
+          "selection": {},
+          "settings": {},
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "d29f2061-62fb-456a-a2fd-b12445673e15",
+          "title": "meteorites fall location by mass and year",
+          "query": "MATCH (m:Meteorite)\nWHERE m.location IS NOT NULL\n  AND (\n    m.year IS NULL OR\n  (toInteger(m.year) >= date($neodash_startyear).year\n  )\nAND (toInteger(m.year) <= date($neodash_endyear).year\n  )\n  AND (\n    m.mass IS NULL OR\n  (toFloat(m.mass) >= toFloat($neodash_minmass) )\nAND   (toFloat(m.mass) <=toFloat($neodash_maxmass))\n)\n)\nRETURN m",
+          "width": 15,
+          "height": 5,
+          "x": 0,
+          "y": 8,
+          "type": "map",
+          "selection": {
+            "Meteorite": "name"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "clusterMarkers": true
+          },
+          "database": "e7bf01a1",
+          "schema": [
+            [
+              "Meteorite",
+              "intensity",
+              "mass",
+              "name",
+              "reclat",
+              "reclong",
+              "location",
+              "id",
+              "year"
+            ]
+          ]
+        },
+        {
+          "id": "b707fd98-3b2b-4b3c-82d5-34b0207f5e89",
+          "title": "select min mass",
+          "query": "RETURN true;",
+          "width": 9,
+          "height": 2,
+          "x": 15,
+          "y": 8,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Free Text",
+            "entityType": "minmass",
+            "parameterName": "neodash_minmass",
+            "backgroundColor": "#E8F0FC"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "8025f09e-f1f3-4fdf-9419-e2fff72e6e50",
+          "title": "select start date",
+          "query": "RETURN true;",
+          "width": 6,
+          "height": 2,
+          "x": 0,
+          "y": 13,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Date Picker",
+            "entityType": "startyear",
+            "backgroundColor": "#E8F0FC",
+            "parameterName": "neodash_startyear"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "09ba14a2-4425-491c-8612-704db727a856",
+          "title": "select end date",
+          "query": "RETURN true;",
+          "width": 7,
+          "height": 2,
+          "x": 6,
+          "y": 13,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Date Picker",
+            "entityType": "endyear",
+            "backgroundColor": "#E8F0FC",
+            "parameterName": "neodash_endyear"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "175c263f-5c3c-414a-ad5a-4011d183a539",
+          "title": "select max mass",
+          "query": "RETURN true;",
+          "width": 9,
+          "height": 2,
+          "x": 15,
+          "y": 10,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Free Text",
+            "backgroundColor": "#E8F0FC",
+            "entityType": "maxmass",
+            "parameterName": "neodash_maxmass"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "e48f9e30-3d1c-4513-b9b4-a84b5173a0d4",
+          "title": "About this page",
+          "query": "\nThis page focuses on recorded meteorite landings and their physical properties such as mass, location, and discovery year.\nWe also calculate the future risk of metorite landing spots.\nYou can see which meteors landed where by selecting time and mass properties.\n",
+          "width": 8,
+          "height": 3,
+          "x": 16,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {},
+          "schema": []
+        }
+      ]
+    },
+    {
+      "title": "systems and exoplanets",
+      "reports": [
+        {
+          "id": "3b05fac9-03a9-4200-aebf-eb6e3310995e",
+          "title": "planet size hierarchy",
+          "query": "MATCH (p:Planet)\n\nOPTIONAL MATCH (p)-[:ORBITS]->(:Star)\n\nWITH p,\nCASE\n  WHEN p.massEarth IS NULL THEN \"Unknown\"\n\n  WHEN p.massEarth < 0.5 THEN \"Sub-earth\"\n  WHEN p.massEarth < 2 THEN \"Earth-like\"\n  WHEN p.massEarth < 10 THEN \"Super-earth\"\n  WHEN p.massEarth < 30 THEN \"Mini-neptune\"\n  WHEN p.massEarth < 100 THEN \"Neptune-like\"\n  WHEN p.massEarth < 300 THEN \"Saturn-like\"\n  ELSE \"Gas giant\"\nEND AS type\n\nWITH\n[\n  type,\n  substring(p.name, 0, 3)\n] AS hierarchy,\n\ncoalesce(p.massEarth,1) AS mass\n\nRETURN hierarchy, mass\nLIMIT 1000",
+          "width": 10,
+          "height": 6,
+          "x": 0,
+          "y": 0,
+          "type": "circlePacking",
+          "selection": {
+            "index": "hierarchy",
+            "value": "mass",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "showLabels": true
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "7149fd78-bc54-463c-b357-5287d87f0965",
+          "title": "planets orbiting selected star",
+          "query": "MATCH (s:Star)\nWHERE coalesce(s.name,s.star_name,toString(s.hip)) = $neodash_star_name\n\nMATCH (p:Planet)-[o:ORBITS]->(s)\n\nRETURN DISTINCT\np.name AS Planet,\np.massEarth AS MassEarth,\no.periodDays AS OrbitDays,\np.equilibriumTemp AS Temperature\nORDER BY p.massEarth DESC\n\n\n\n\n\n",
+          "width": 10,
+          "height": 5,
+          "x": 0,
+          "y": 6,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "downloadImageEnabled": true,
+            "fullscreenEnabled": true,
+            "allowDownload": true,
+            "backgroundColor": "#FFFEE752"
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "08aef58f-6046-4d90-9218-df8818b694ca",
+          "title": "select a star",
+          "query": "MATCH (s:Star)<-[:ORBITS]-(p:Planet)\nWITH DISTINCT s\nRETURN DISTINCT\ncoalesce(s.name, s.star_name, toString(s.hip)) AS value",
+          "width": 9,
+          "height": 2,
+          "x": 10,
+          "y": 6,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "star_name",
+            "parameterName": "neodash_star_name",
+            "backgroundColor": "#FFFEE7A6"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "5788ea5d-148d-4345-a3e8-170137282899",
+          "title": "star systems",
+          "query": "MATCH (p:Planet)-[r:ORBITS]->(s:Star)\nreturn DISTINCT p, r, s \nLIMIT 1000",
+          "width": 14,
+          "height": 4,
+          "x": 10,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "Planet": "name",
+            "ORBITS": "(label)",
+            "Star": "star_name"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true
+          },
+          "schema": [
+            [
+              "Planet",
+              "massJupiter",
+              "name",
+              "eccentricity",
+              "controversial",
+              "massEarth",
+              "radiusJupiter",
+              "radiusEarth",
+              "equilibriumTemp",
+              "insolation"
+            ],
+            [
+              "ORBITS",
+              "eccentricity",
+              "periodDays",
+              "semiMajorAxisAU"
+            ],
+            [
+              "Star",
+              "spect",
+              "star_name",
+              "surfaceGravity",
+              "lookup",
+              "teff",
+              "dist",
+              "stellarRadius",
+              "systemPlanetCount",
+              "stellarMass",
+              "metallicity",
+              "systemStarCount"
+            ]
+          ],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "368f5031-dd0f-436d-9740-4536752a5660",
+          "title": "earth-like planets",
+          "query": "MATCH (p:Planet)-[:ORBITS]->(s:Star)\n\nWHERE p.massEarth IS NOT NULL\n  AND p.equilibriumTemp IS NOT NULL\n  AND p.insolation IS NOT NULL\n\n  AND (s.mass IS NULL OR\n       (s.mass >= toFloat($neodash_minmass)\nAND s.mass <= toFloat($neodash_maxmass)))\n\n  AND (s.distance IS NULL OR\n       s.distance <= toFloat($neodash_distance))\n\n  AND (s.temperature IS NULL OR\n       s.temperature <= toFloat($neodash_maxtemp))\n\nWITH p, s,\n     1.0 AS earthMass,\n     288.0 AS earthTemp,\n     1.0 AS earthInsolation\n\nWITH p, s, earthMass, earthTemp, earthInsolation,\n\n     1 / (1 + abs(p.massEarth - earthMass)) AS massScore,\n     1 / (1 + abs(p.equilibriumTemp - earthTemp) / 50) AS tempScore,\n     1 / (1 + abs(p.insolation - earthInsolation)) AS insolationScore\n\nWITH p, s,\n     (massScore * 0.4 +\n      tempScore * 0.4 +\n      insolationScore * 0.2) AS habitabilityRaw\n\nRETURN DISTINCT\np.name AS Planet,\nround(habitabilityRaw * 100, 1) AS HabitabilityIndex,\nround(p.massEarth, 2) AS Mass,\nround(p.equilibriumTemp, 0) AS TempK,\nround(p.insolation, 2) AS Insolation,\ncoalesce(s.name, s.star_name, toString(s.hip)) AS HostStar\n\nORDER BY HabitabilityIndex DESC\nLIMIT 50",
+          "width": 13,
+          "height": 4,
+          "x": 0,
+          "y": 11,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "allowDownload": true,
+            "backgroundColor": "#E0FFD454"
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "ba374436-d0bf-41bc-b4c5-f38ad3c2c24e",
+          "title": "select min distance",
+          "query": "\n\nMATCH (s:Star)\nWHERE s.dist IS NOT NULL\n\nRETURN\ntoInteger(s.dist) AS value\n\n\n\n\n",
+          "width": 7,
+          "height": 2,
+          "x": 13,
+          "y": 13,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "distance",
+            "backgroundColor": "#E0FFD4D6",
+            "parameterName": "neodash_distance"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "a4e2f4e0-4e23-465f-828d-c5b6fdd84319",
+          "title": "select min mass",
+          "query": "\nMATCH (p:Planet)\nWHERE p.massEarth IS NOT NULL\n\nRETURN\ntoInteger(p.massEarth) AS value\n\n\n\n\n\n",
+          "width": 7,
+          "height": 2,
+          "x": 0,
+          "y": 15,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "minmass",
+            "parameterName": "neodash_minmass",
+            "backgroundColor": "#E0FFD4D6"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "a3787e93-5a38-489d-b9fd-888cb95758d9",
+          "title": "select max mass",
+          "query": "\n\nMATCH (p:Planet)\nWHERE p.massEarth IS NOT NULL\n\nRETURN\ntoInteger(p.massEarth) AS value\n\n\n\n\n",
+          "width": 6,
+          "height": 2,
+          "x": 7,
+          "y": 15,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "maxmass",
+            "parameterName": "neodash_maxmass",
+            "backgroundColor": "#E0FFD4D6"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "0f82ceab-bce9-4647-809c-132084678b97",
+          "title": "select max temperature",
+          "query": "MATCH (p:Planet)\nWHERE p.equilibriumTemp IS NOT NULL\n\nRETURN\ntoInteger(p.equilibriumTemp) AS value\n\n\n\n\n\n",
+          "width": 7,
+          "height": 2,
+          "x": 13,
+          "y": 11,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "maxtemp",
+            "parameterName": "neodash_maxtemp",
+            "backgroundColor": "#E0FFD4D6"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "a33f63ff-3628-49b3-ab4a-87dcf8d4cb91",
+          "title": "most habitable planets",
+          "query": "\nMATCH (p:Planet)-[:ORBITS]->(s:Star)\nWHERE p.equilibriumTemp IS NOT NULL\n\nWITH p, s,\n     abs(p.equilibriumTemp - 288.0) / 288.0 AS tempNorm,\n//288K is earth's temp so whatever's close to that\n     abs(coalesce(p.massEarth, 1) - 1.0) AS massDev,\n     coalesce(p.eccentricity, 0) AS ecc//orbital eccentricity\n\nWITH p, s,\n(\n//exp(-x), the closer to earth ->score near 1\n  exp(-tempNorm) * 0.5 +//scaling\n  exp(-massDev) * 0.3 +\n  exp(-ecc) * 0.2\n) AS habitabilityScore\n\nRETURN DISTINCT\np.name AS Planet,\nhabitabilityScore,\nround(p.equilibriumTemp,1) AS Temp,\ncoalesce(s.name, s.star_name) AS Star\nORDER BY habitabilityScore DESC\nLIMIT 50\n\n",
+          "width": 14,
+          "height": 3,
+          "x": 10,
+          "y": 8,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "compact": true,
+            "allowDownload": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "7d1fc162-7781-4e8a-8f2c-417cd98f955b",
+          "title": "general info about planets in selected star system and their discovery",
+          "query": "\nMATCH (sys:System {name: $neodash_system_name})<-[:PART_OF]-(s:Star)\nMATCH (s)<-[r:ORBITS]-(p:Planet)\nMATCH (p)-[dr:DISCOVERED_BY]->(dm:DiscoveryMethod)\nRETURN DISTINCT\n  s.star_name AS star,\n  p.name AS planet,\n//create fake rel for visualizing\n  apoc.create.vRelationship(\n    p,\n    'ORBITS (' + toString(coalesce(r.periodDays,0)) + 'd @ ' + toString(coalesce(round(r.semiMajorAxisAU*1000)/1000.0,0)) + 'AU)',\n    properties(r),\n    s\n  ) AS orbitDisplay,\n  dm.name AS discoveryMethod,\n  apoc.create.vRelationship(\n    p,\n    'DISCOVERY_YEAR (' + toString(coalesce(dr.year,'?')) + ')',\n    properties(dr),\n    dm\n  ) AS discoveryDisplay\n\n\n\n",
+          "width": 23,
+          "height": 4,
+          "x": 0,
+          "y": 19,
+          "type": "table",
+          "selection": {},
+          "settings": {},
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "266fc253-524c-4ff8-bdb6-1f81440e7f83",
+          "title": "choose star system",
+          "query": "MATCH (n:`System`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 9,
+          "height": 2,
+          "x": 0,
+          "y": 17,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "System",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_system_name"
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "4f41a5ae-96c6-4c16-910c-f41031506f19",
+          "title": "About this page",
+          "query": "This page visualizes planetary systems and the exoplanets orbiting their host stars.\nIt focuses on planetary properties such as mass, radius, temperature, and orbital relationships. \nYou can also find most habitable planets according to your input.",
+          "width": 13,
+          "height": 2,
+          "x": 10,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {},
+          "schema": []
+        }
+      ]
+    },
+    {
+      "title": "discovery facilities",
+      "reports": [
+        {
+          "id": "b51f9859-34be-43be-b259-a52790f98838",
+          "title": "score by diverse,spread out discovery facilities",
+          "query": "MATCH (p:Planet)-[:DISCOVERED_AT]->(f:Facility)\nMATCH (p)-[:ORBITS]->(s:Star)\nWHERE \n  $neodash_facilityname = \"Any\"\n  OR f.name = $neodash_facilityname\n\n\nWITH f,\n     count(p) AS planets,//how many planets discovered\n     count(DISTINCT s) AS systems//how many systems searched\n//distinct if multiple stars discovered in 1 system\n//else would skew results\nRETURN\nf.name AS name,\n(planets * log10(systems + 1)) AS score\nORDER BY score DESC",
+          "width": 11,
+          "height": 4,
+          "x": 0,
+          "y": 19,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "allowDownload": true,
+            "backgroundColor": "#FEEDFFBD"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "fbe3fc79-a9c0-4106-b616-0adc37af67c3",
+          "title": "planet discovery per facility",
+          "query": "MATCH (p:Planet)-[:DISCOVERED_AT]->(f:Facility)\n\nWHERE\n  $neodash_facilityname = \"Any\"\n  OR f.name = $neodash_facilityname // in case of Any, TRUE OR ...=TRUE,all rows returned\n\nRETURN\nf.name AS Facility,\ncount(p) AS PlanetsFound\nORDER BY PlanetsFound DESC\nLIMIT 20\n\n\n\n\n",
+          "width": 17,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "bar",
+          "selection": {
+            "index": "Facility",
+            "value": "PlanetsFound",
+            "key": "(none)"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "layout": "horizontal",
+            "marginLeft": 230,
+            "downloadImageEnabled": true
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "5d0ccdd9-ae0f-480a-8fe1-8125c6d5e8bd",
+          "title": "discovery methods over time",
+          "query": "\n\nMATCH (p:Planet)-[d:DISCOVERED_BY]->(m:DiscoveryMethod)\nWHERE d.year IS NOT NULL\n\nRETURN\nd.year AS Year,\nm.name AS Method,\ncount(*) AS Discoveries\nORDER BY Year, Method\n\n\n\n",
+          "width": 20,
+          "height": 4,
+          "x": 0,
+          "y": 27,
+          "type": "bar",
+          "selection": {
+            "index": "Year",
+            "value": "Discoveries",
+            "key": "Method"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "legend": true,
+            "showOptionalSelections": true,
+            "marginRight": 80
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "298b4029-a466-4262-9844-5c52fad856e4",
+          "title": "choose facility",
+          "query": "MATCH (f:Facility)\nWHERE f.name IS NOT NULL\n\nWITH collect(DISTINCT f.name) AS Facilities\n//add any to that list\nUNWIND ([\"Any\"] + Facilities) AS value\n//rows +Any for dropdown\nRETURN\nvalue AS label,\nvalue AS value\nORDER BY label\n\n\n",
+          "width": 9,
+          "height": 3,
+          "x": 11,
+          "y": 19,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Custom Query",
+            "entityType": "facilityname",
+            "parameterName": "neodash_facilityname",
+            "backgroundColor": "#FEEDFFBD"
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "21c4977b-f356-4565-a5df-459456439d92",
+          "title": "which facility was the planet discovered at",
+          "query": "\nMATCH (p:Planet)-[d:DISCOVERED_AT]->(f:Facility)\n\nWHERE p.name = $neodash_planet_name\n\nRETURN\nf.name AS Facility\n\n",
+          "width": 11,
+          "height": 4,
+          "x": 0,
+          "y": 23,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#DCFDFFBD",
+            "fullscreenEnabled": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "7a4f44fd-5809-45a6-8240-82a4267d237c",
+          "title": "choose planet",
+          "query": "MATCH (n:`Planet`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 8,
+          "height": 3,
+          "x": 11,
+          "y": 22,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Planet",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_planet_name",
+            "backgroundColor": "#DCFDFFBD"
+          },
+          "schema": [],
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "1844a15a-1ed1-434b-bbc4-789d960ecf20",
+          "title": "discovery method analytics by facilities by years",
+          "query": "WITH\nrange($neodash_discovered_by_year_1, $neodash_discovered_by_year_2) AS years,//list of years\n$neodash_facility_name AS f1,\n$neodash_facility_name_2 AS f2\n\nUNWIND years AS y\n\nMATCH (f:Facility)\nWHERE f.name IN [f1, f2]\n\nMATCH (p:Planet)-[:DISCOVERED_AT]->(f)\nOPTIONAL MATCH (p)-[db:DISCOVERED_BY]->(dm:DiscoveryMethod)\nWHERE toInteger(db.year) = y\n\nWITH\nf, y, p, dm,\ncoalesce(dm.name, \"UNKNOWN\") AS method\n\nWITH f.name AS facility,\n     y AS year,\n     method,\n     count(DISTINCT p) AS planet_count\n//total planets per year per facility\nCALL {\n    WITH facility, year\n    MATCH (f:Facility {name: facility})\n    MATCH (p:Planet)-[:DISCOVERED_AT]->(f)\n    MATCH (p)-[db:DISCOVERED_BY]->(:DiscoveryMethod)\n    WHERE toInteger(db.year) = year\n    RETURN count(DISTINCT p) AS total_planets\n}\n\nWITH facility, year, method, planet_count, total_planets,\nCASE\n  WHEN total_planets = 0 THEN 0.0\n  ELSE 1.0 * planet_count / total_planets\nEND AS share//share of each method\n\nWITH facility, year,\n     collect({\n        method: method,\n        count: planet_count,\n        share: share\n     }) AS methods\n\nWITH facility, year, methods,\n     apoc.coll.sortMaps(methods, \"count\") AS sorted_methods\n\nWITH facility, year, methods,\n     head(reverse(sorted_methods)) AS top_method,\n//reverse: largest->smallest, head->1st element aka best one\n//how spread out are discoveries aka if one method dominates - low diversity\n//reduce() is Cypher’s way of doing a loop over a list while accumulating a result\n     reduce(s = 0.0, m IN methods |\n        s + CASE\n                WHEN m.share <= 0 THEN 0\n                ELSE -1.0 * m.share * log(m.share)\n            END\n     ) AS diversity_score\n\nRETURN\n    facility,\n    toString(year) AS year,\n    top_method.method AS best_method,\n    top_method.count AS PlanetsFoundByBestMethod,\n    round(top_method.share * 100, 2) AS percentage_share,\n    round(diversity_score, 4) AS diversity_index\nORDER BY diversity_index ASC;",
+          "width": 19,
+          "height": 8,
+          "x": 0,
+          "y": 11,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "fullscreenEnabled": true,
+            "compact": false,
+            "allowDownload": true
+          },
+          "database": "e7bf01a1"
+        },
+        {
+          "id": "2ee1be3a-d734-48d4-9685-5efcf53bb310",
+          "title": "choose facility 1",
+          "query": "MATCH (n:`Facility`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 5,
+          "height": 2,
+          "x": 19,
+          "y": 15,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Facility",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_facility_name"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "1cc5ef11-3674-4f09-99bf-cb84598d7b9d",
+          "title": "choose facility 2",
+          "query": "MATCH (n:`Facility`) \nWHERE toLower(toString(n.`name`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`name` as value,  n.`name` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 5,
+          "height": 2,
+          "x": 19,
+          "y": 17,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Facility",
+            "propertyType": "name",
+            "propertyTypeDisplay": "name",
+            "parameterName": "neodash_facility_name_2",
+            "id": "2"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "1df547c5-85b4-4503-aaed-44b53b94e291",
+          "title": "choose end year",
+          "query": "MATCH ()-[n:`DISCOVERED_BY`]->() \nWHERE toLower(toString(n.`year`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`year` as value,  n.`year` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 5,
+          "height": 2,
+          "x": 19,
+          "y": 13,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Relationship Property",
+            "entityType": "DISCOVERED_BY",
+            "propertyType": "year",
+            "propertyTypeDisplay": "year",
+            "parameterName": "neodash_discovered_by_year_2",
+            "id": "2"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "d6158edb-ec0d-4050-a3b2-700cf22e680c",
+          "title": "choose start year",
+          "query": "MATCH ()-[n:`DISCOVERED_BY`]->() \nWHERE toLower(toString(n.`year`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`year` as value,  n.`year` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 5,
+          "height": 2,
+          "x": 19,
+          "y": 11,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Relationship Property",
+            "entityType": "DISCOVERED_BY",
+            "propertyType": "year",
+            "propertyTypeDisplay": "year",
+            "parameterName": "neodash_discovered_by_year_1"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "ea352d66-e520-4b50-abb2-81ee794e7445",
+          "title": "planets by discovery type",
+          "query": "\nMATCH (s:Star)<-[o:ORBITS]-(p:Planet)\nOPTIONAL MATCH (p)-[d:DISCOVERED_BY]->(m:DiscoveryMethod)\n  WHERE m IS NOT NULL\n\nWITH s, p, o, d, m\nWHERE m IS NOT NULL\n\nRETURN DISTINCT s,p, o, d, m\nLIMIT 45\n\n",
+          "width": 23,
+          "height": 7,
+          "x": 0,
+          "y": 4,
+          "type": "sankey",
+          "selection": {
+            "Star": "star_name",
+            "Planet": "name",
+            "DiscoveryMethod": "name"
+          },
+          "settings": {
+            "fullscreenEnabled": true,
+            "downloadImageEnabled": true,
+            "labelProperty": "year",
+            "layout": "vertical"
+          },
+          "database": "e7bf01a1",
+          "schema": []
+        },
+        {
+          "id": "1bf62258-16ae-4f1d-9553-a937daccacbf",
+          "title": "About this page",
+          "query": " This page shows the analytics of observatories and discovery methods responsible for detecting planets. \n You can also compare and see which facilities contribute most, what planet was discovered where, and what methods they used during each year, compare 2 facilities.\n",
+          "width": 6,
+          "height": 4,
+          "x": 17,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {},
+          "schema": []
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "active": true,
+    "activeReducers": [],
+    "advanced-charts": {
+      "active": true
+    },
+    "styling": {
+      "active": true
+    },
+    "actions": {
+      "active": true
+    },
+    "query-translator": {},
+    "forms": {
+      "active": true
+    },
+    "access-control-management": {
+      "active": true
+    }
+  },
+  "uuid": "cf7b5e4e-e69e-4746-b97e-62a31a2ca865"
+}
